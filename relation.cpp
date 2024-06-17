@@ -23,17 +23,21 @@ Relation::Relation(string filename) {
 		stringstream line_stream(line); string cell;
 		while (getline(line_stream, cell, ',')) {
 			strip(cell); this->column_names.push_back(cell); }
-
 	}
 
 	while (getline(rel_data, line)) {
+		vector<string> row;
 		stringstream line_stream(line); string cell;
 		while (getline(line_stream, cell, ',')) {
-
-		}
+			strip(cell); row.push_back(cell); }
+		this->fields.push_back(row);
 	}
 }
 
 Relation* Relation::build_bitmap(int field_index) {
 	return nullptr;
+}
+
+void Relation::add_edependency(Relation* ed, int column) {
+	foreign_keys.push_back(make_tuple(ed, column));
 }
