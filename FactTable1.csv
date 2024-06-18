@@ -1,5 +1,5 @@
 ID, D1, D2, D3, D4, Fact1, Fact2, Fact3, Fact4, Fact5
-1, a1, b1, 7, 4, abc11, abc21, abc31, abc4
-2, a1, b2, 7, 4, abc12, abc21, abc31, abc4
-3, a2, b1, 7, 4, abc11, abc22, abc32, abc4
-4, a2, b2, 7, 4, abc12, abc22, abc32, abc4
+1, a1, b1, 71, 14, abc11, abc21, 8.3, 2
+2, a1, b2, 72, 24, abc12, abc21, 9.3, 2
+3, a2, b1, 73, 34, abc11, abc22, 10, 2
+4, a2, b2, 74, 44, abc12, abc22, 0.33, 2

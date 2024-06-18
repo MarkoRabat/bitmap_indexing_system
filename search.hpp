@@ -7,13 +7,15 @@ class Relation;
 #include <string>
 #include <sstream>
 #include <regex>
+#include "agregation.hpp"
 using namespace std;
 void strip(string&);
 
 class Search {
 public:
 	Search(Relation* rrel) { this->rel = rrel; }
-	virtual vector<vector<string>> search_value(const string &val, vector<int> columns) {
+	virtual vector<vector<string>> search_value(
+		const string &val, vector<int> columns, vector<Agregate> agrf) {
 		return vector<vector<string>>();
 	}
 protected:
