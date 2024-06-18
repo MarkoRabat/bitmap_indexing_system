@@ -41,3 +41,9 @@ Relation* Relation::build_bitmap(int field_index) {
 void Relation::add_edependency(Relation* ed, int column) {
 	foreign_keys.push_back(make_tuple(ed, column));
 }
+
+void Relation::print_column_names() {
+	for (int i = 0; i < this->column_names.size() - 1; ++i)
+		cout << this->column_names[i] << " ";
+	cout << this->column_names[this->column_names.size() - 1] << endl;
+}
