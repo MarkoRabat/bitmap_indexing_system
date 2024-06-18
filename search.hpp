@@ -15,7 +15,7 @@ class Search {
 public:
 	Search(Relation* rrel) { this->rel = rrel; }
 	virtual vector<vector<string>> search_value(
-		const string &val, vector<int> columns, vector<Agregate> agrf) {
+		const string &val, vector<int> columns, vector<Agregate*> agrf) {
 		return vector<vector<string>>();
 	}
 protected:

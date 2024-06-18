@@ -12,7 +12,7 @@ class SequentialSearch : public Search {
 public:
 	SequentialSearch(Relation* rrel) : Search(rrel) {}
 	vector<vector<string>> search_value(
-		const string &val, vector<int> columns, vector<Agregate> agrf);
+		const string &val, vector<int> columns, vector<Agregate*> agrf);
 };
 
 #endif

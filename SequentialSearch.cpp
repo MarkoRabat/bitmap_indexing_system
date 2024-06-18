@@ -5,12 +5,13 @@
 #include <stdexcept>
 #include <iostream>
 #include <algorithm>
+#include <iomanip>
 using namespace std;
 
 
 vector<vector<string>>
 SequentialSearch::search_value(
-	const string &val, vector<int> columns, vector<Agregate> agrf) {
+	const string &val, vector<int> columns, vector<Agregate*> agrf) {
 	string sse = simplify_search_expr(val); parse_search_ops(sse); parse_search_terms(sse);
 	for (int i = 0; i < columns.size(); ++i) if (columns[i] >= this->rel->column_names.size()) {
 		cerr << "Error: column index out of range" << endl; return vector<vector<string>>(); }
@@ -20,7 +21,7 @@ SequentialSearch::search_value(
 			cerr << "Error: agregation function must be specified for every column not indexed" << endl;
 			return vector<vector<string>>();
 		}
-		if (find(columns.begin(), columns.end(), i) == columns.end()) agrf[j++].set_column(i);
+		if (find(columns.begin(), columns.end(), i) == columns.end()) agrf[j++]->set_column(i);
 	}
 
 	vector<vector<string>> result;
@@ -36,10 +37,16 @@ SequentialSearch::search_value(
 		for (int j = 0; j < search_cond.size() && !row_matched; ++j)
 			row_matched = row_matched || search_cond[j];
 
+
 		if (row_matched) {
 			result.push_back(this->rel->fields[i]);
-			for (int j = 0; j < agrf.size(); agrf[j++].add_row(this->rel->fields[i]));
+			for (int j = 0; j < agrf.size(); agrf[j++]->add_row(this->rel->fields[i]));
 		}
+	}
+
+	for (int i = 0; i < agrf.size(); ++i) {
+		cout << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column()) + "): " << agrf[i]->get_result() << endl;
+		delete agrf[i];
 	}
 	return result;
 }

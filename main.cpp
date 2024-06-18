@@ -2,6 +2,7 @@
 #include "relation.hpp"
 #include "search.hpp"
 #include "sequential_search.hpp"
+#include "agregation.hpp"
 using namespace std;
 
 int main() {
@@ -13,8 +14,9 @@ int main() {
 	Search s1(&r1);
 	SequentialSearch s2(&r1);
 	vector<vector<string>> rez = s2.search_value(
-		"a2 || b2 && abc12 || abc21",
-		{1, 2, 5, 6}
+		"a2 || b2 && abc12",
+		{1, 2, 5},
+		{new Avg(), new Avg(), new Min(), new NoAgr(), new Max(), new Sum()}
 	);
 	for (vector<string>& row : rez) {
 		for (string& column : row)
