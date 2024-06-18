@@ -11,9 +11,15 @@ int main() {
 	r1.print_column_names();
 
 	Search s1(&r1);
-	s1.search_value("hello", 3);
 	SequentialSearch s2(&r1);
-	s2.search_value("hello && hello2 && hello3 || hello4 or hello5 and hello6 and hello7", 3);
+	vector<vector<string>> rez = s2.search_value(
+		"a2 || b2 && abc12 || abc21",
+		{1, 2, 5, 6}
+	);
+	for (vector<string>& row : rez) {
+		for (string& column : row)
+			cout << column << " "; cout << endl;
+	}
 
 	return 0;
 }

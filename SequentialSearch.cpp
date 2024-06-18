@@ -7,27 +7,24 @@ using namespace std;
 
 
 vector<vector<string>>
-SequentialSearch::search_value(const string &val, int column) {
-
-	string sse = simplify_search_expr(val);
-
-
-	parse_search_ops(sse);
-	for (string& st : parsed_search_ops) {
-		cout << st << " _ ";
-	} cout << endl;
-
-	parse_search_terms(sse);
-	for (string &st : parsed_search_terms) {
-		cout << st << " _ ";
-	} cout << endl;
-
-	if (column >= this->rel->column_names.size()) {
+SequentialSearch::search_value(const string &val, vector<int> columns) {
+	string sse = simplify_search_expr(val); parse_search_ops(sse); parse_search_terms(sse);
+	for (int i = 0; i < columns.size(); ++i) if (columns[i] >= this->rel->column_names.size()) {
 		cerr << "Error: column index out of range" << endl; return vector<vector<string>>(); }
-	cout << this->rel->column_names[column] << endl;
+
 	vector<vector<string>> result;
-	for (int i = 0; i < this->rel->fields.size(); ++i)
-		if (sse == this->rel->fields[i][column])
-			result.push_back(this->rel->fields[i]);
+	for (int i = 0; i < this->rel->fields.size(); ++i) {
+		vector<bool> search_cond; bool row_matched = false;
+		for (int j = 0; j < columns.size(); ++j)
+			search_cond.push_back(this->rel->fields[i][columns[j]] == this->parsed_search_terms[j]);
+
+		for (int j = 0; j < this->parsed_search_ops.size(); ++j)
+			if (this->parsed_search_ops[j] == "and_" && j + 1 < search_cond.size()) {
+				search_cond[j + 1] = search_cond[j] && search_cond[j + 1]; search_cond[j] = false; }
+
+		for (int j = 0; j < search_cond.size() && !row_matched; ++j)
+			row_matched = row_matched || search_cond[j];
+		if (row_matched) result.push_back(this->rel->fields[i]);
+	}
 	return result;
 }

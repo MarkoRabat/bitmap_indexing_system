@@ -10,7 +10,7 @@ using namespace std;
 class SequentialSearch : public Search {
 public:
 	SequentialSearch(Relation* rrel) : Search(rrel) {}
-	vector<vector<string>> search_value(const string &val, int column);
+	vector<vector<string>> search_value(const string &val, vector<int> columns);
 };
 
 #endif

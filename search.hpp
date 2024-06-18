@@ -13,15 +13,14 @@ void strip(string&);
 class Search {
 public:
 	Search(Relation* rrel) { this->rel = rrel; }
-	virtual vector<vector<string>> search_value(const string &val, int column) {
-		cout << "search value: " << val << " in column: " << column << endl;
+	virtual vector<vector<string>> search_value(const string &val, vector<int> columns) {
 		return vector<vector<string>>();
 	}
 protected:
 	string simplify_search_expr(const string &search_expr) {
 		string simplifyed_search_expr = regex_replace(search_expr, regex("\\|\\|"), "|");
 		simplifyed_search_expr = regex_replace(simplifyed_search_expr, regex("or"), "|");
-		simplifyed_search_expr = regex_replace(search_expr, regex("&&"), "&");
+		simplifyed_search_expr = regex_replace(simplifyed_search_expr, regex("&&"), "&");
 		simplifyed_search_expr = regex_replace(simplifyed_search_expr, regex("and"), "&");
 		return simplifyed_search_expr;
 	}
