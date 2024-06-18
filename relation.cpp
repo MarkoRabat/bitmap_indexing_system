@@ -34,16 +34,37 @@ Relation::Relation(string filename) {
 	}
 }
 
-Relation* Relation::build_bitmap(int field_index) {
-	return nullptr;
-}
-
 void Relation::add_edependency(Relation* ed, int column) {
 	foreign_keys.push_back(make_tuple(ed, column));
+	bitmaps[column] = build_bitmap(column);
 }
 
 void Relation::print_column_names() {
 	for (int i = 0; i < this->column_names.size() - 1; ++i)
 		cout << this->column_names[i] << " ";
 	cout << this->column_names[this->column_names.size() - 1] << endl;
+}
+
+#define BITSEQ_SIZE 32
+unordered_map<string, vector<unsigned>> Relation::build_bitmap(int column) {
+
+	unordered_map<string, vector<unsigned>> bitmap;
+	for (int i = 0; i < this->fields.size(); ++i) {
+		int barr_size = (i != 0 && i % BITSEQ_SIZE == 0) ? 1 : 0;
+		if (bitmap.begin() != bitmap.end())
+			barr_size += bitmap[bitmap.begin()->first].size() - 1;
+		for (auto it = bitmap.begin(); it != bitmap.end(); ++it) {
+			if (i % BITSEQ_SIZE == 0) bitmap[it->first].push_back(0u);
+			bitmap[it->first][barr_size] <<= 1u;
+		}
+
+		if (bitmap.find(this->fields[i][column]) == bitmap.end()) {
+			bitmap[this->fields[i][column]] = vector<unsigned>();
+			for (int k = 0; k < 1 + i / BITSEQ_SIZE; ++k)
+				bitmap[this->fields[i][column]].push_back(0u);
+		}
+		bitmap[this->fields[i][column]][barr_size]++;
+	}
+	return bitmap;
+
 }
