@@ -6,8 +6,8 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <fstream>
 using namespace std;
-
 
 vector<vector<string>>
 SequentialSearch::search_value(
@@ -44,9 +44,20 @@ SequentialSearch::search_value(
 		}
 	}
 
-	for (int i = 0; i < agrf.size(); ++i) {
-		cout << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column()) + "): " << agrf[i]->get_result() << endl;
-		delete agrf[i];
+	if (!this->print_to_file) {
+		for (int i = 0; i < agrf.size(); ++i)
+			cout << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column()) + "): " << agrf[i]->get_result() << endl;
+		for (vector<string>& row : result) {
+			for (string& column : row) cout << column << " "; cout << endl; }
 	}
+	else {
+		ofstream rfile(this->filename);
+		for (int i = 0; i < agrf.size(); ++i)
+			rfile << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column()) + "): " << agrf[i]->get_result() << endl;
+		for (vector<string>& row : result) {
+			for (string& column : row) rfile << column << " "; rfile << endl; }
+	}
+	for (int i = 0; i < agrf.size(); ++i)
+		delete agrf[i];
 	return result;
 }

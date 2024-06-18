@@ -18,6 +18,7 @@ public:
 	unordered_map<string, vector<unsigned>> build_bitmap(int field);
 	void add_edependency(Relation* ed, int column);
 	void print_column_names();
+	void print_bitmaps();
 
 private:
 	vector<string> column_names;
@@ -29,5 +30,6 @@ private:
 };
 
 void strip(string& s);
+void print_bitmap_index(const unordered_map<string, vector<unsigned>> &bmi);
 
 #endif

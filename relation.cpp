@@ -3,7 +3,6 @@
 #include <sstream>
 #include <fstream>
 #include <string>
-#include <string>
 using namespace std;
 
 void strip(string& s) {
@@ -67,4 +66,21 @@ unordered_map<string, vector<unsigned>> Relation::build_bitmap(int column) {
 	}
 	return bitmap;
 
+}
+
+void Relation::print_bitmaps() {
+	for (auto it = bitmaps.begin(); it != bitmaps.end(); ++it) {
+		cout << "bitmap for column " << it->first << ":" << endl;
+		print_bitmap_index(it->second);
+	}
+}
+
+void print_bitmap_index(const unordered_map<string, vector<unsigned>>& bmi) {
+	for (auto it = bmi.begin(); it != bmi.end(); ++it) {
+		cout << it->first << ": #";
+		cout.setf(ios::hex, ios::basefield);
+		for (auto s : it->second) cout << s << " ";
+		cout.unsetf(ios::hex);
+		cout << endl;
+	}
 }

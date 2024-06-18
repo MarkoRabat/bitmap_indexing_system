@@ -18,6 +18,7 @@ public:
 		const string &val, vector<int> columns, vector<Agregate*> agrf) {
 		return vector<vector<string>>();
 	}
+	void set_filename(string f) { this->filename = f; this->print_to_file = true; }
 protected:
 	string simplify_search_expr(const string &search_expr) {
 		string simplifyed_search_expr = regex_replace(search_expr, regex("\\|\\|"), "|");
@@ -50,6 +51,8 @@ protected:
 	Relation* rel;
 	vector<string> parsed_search_terms;
 	vector<string> parsed_search_ops;
+	string filename;
+	bool print_to_file = false;
 };
 
 #endif
