@@ -12,6 +12,7 @@ class Relation {
 public:
 	friend class Search;
 	friend class SequentialSearch;
+	friend class BitmapSearch;
 
 	Relation(string filename);
 	Relation() {}
@@ -31,5 +32,6 @@ private:
 
 void strip(string& s);
 void print_bitmap_index(const unordered_map<string, vector<unsigned>> &bmi);
+void print_bitmaps(const unordered_map< int, unordered_map<string, vector<unsigned>>>& bitmaps);
 
 #endif

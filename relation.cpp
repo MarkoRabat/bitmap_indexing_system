@@ -44,6 +44,7 @@ void Relation::print_column_names() {
 	cout << this->column_names[this->column_names.size() - 1] << endl;
 }
 
+//#define BITSEQ_SIZE 4
 #define BITSEQ_SIZE 32
 unordered_map<string, vector<unsigned>> Relation::build_bitmap(int column) {
 
@@ -82,5 +83,13 @@ void print_bitmap_index(const unordered_map<string, vector<unsigned>>& bmi) {
 		for (auto s : it->second) cout << s << " ";
 		cout.unsetf(ios::hex);
 		cout << endl;
+	}
+}
+
+void print_bitmaps(const unordered_map<
+	int, unordered_map<string, vector<unsigned>>> &bitmaps) {
+	for (auto it = bitmaps.begin(); it != bitmaps.end(); ++it) {
+		cout << "bitmap for column " << it->first << ":" << endl;
+		print_bitmap_index(it->second);
 	}
 }

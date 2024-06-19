@@ -7,6 +7,7 @@ class Relation;
 #include <string>
 #include <sstream>
 #include <regex>
+#include <fstream>
 #include "agregation.hpp"
 using namespace std;
 void strip(string&);
@@ -48,6 +49,47 @@ protected:
 			if (search_expr[i] == '&') parsed_search_ops.push_back("and_");
 		}
 	}
+	void print_search_results(const vector<vector<string>>& result, const vector<Agregate*>& agrf) {
+		if (!this->print_to_file) {
+			cout << "Agregation results: " << endl;
+			cout << "=================================" << endl;
+			for (int i = 0; i < agrf.size(); ++i)
+				cout << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column())
+				+ (agrf[i]->agr_id() == "NoAgr" ?  "): " : ") ") << agrf[i]->get_result() << endl;
+			cout << "=================================" << endl;
+			for (const vector<string>& row : result) {
+				for (const string& column : row) cout << column << " "; cout << endl; }
+		}
+		else {
+			ofstream rfile(this->filename);
+			rfile << "Agregation results: " << endl;
+			rfile << "=================================" << endl;
+			for (int i = 0; i < agrf.size(); ++i)
+				rfile << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column())
+				+ (agrf[i]->agr_id() == "NoAgr" ?  ") " : "): ") << agrf[i]->get_result() << endl;
+			rfile << "=================================" << endl;
+			for (const vector<string>& row : result) {
+				for (const string& column : row) rfile << column << " "; rfile << endl; }
+		}
+	}
+	bool search_initialization(const string &val, const vector<int>& columns, const vector<Agregate*>& agrf, int cnames_size) {
+
+		string sse = simplify_search_expr(val); parse_search_ops(sse); parse_search_terms(sse);
+		for (int i = 0; i < columns.size(); ++i) if (columns[i] >= cnames_size) {
+			cerr << "Error: column index out of range" << endl; return false; }
+
+		for (int i = 0, j = 0; i < cnames_size; ++i) {
+			if (find(columns.begin(), columns.end(), i) == columns.end()) {
+				if (j >= agrf.size()) {
+					cerr << "Error: agregation function must be specified for every column not indexed" << endl;
+					return false;
+				}
+				agrf[j++]->set_column(i);
+			}
+		}
+		return true;
+	}
+
 	Relation* rel;
 	vector<string> parsed_search_terms;
 	vector<string> parsed_search_ops;

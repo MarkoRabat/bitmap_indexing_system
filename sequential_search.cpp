@@ -6,23 +6,16 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
-#include <fstream>
 using namespace std;
 
 vector<vector<string>>
 SequentialSearch::search_value(
 	const string &val, vector<int> columns, vector<Agregate*> agrf) {
-	string sse = simplify_search_expr(val); parse_search_ops(sse); parse_search_terms(sse);
-	for (int i = 0; i < columns.size(); ++i) if (columns[i] >= this->rel->column_names.size()) {
-		cerr << "Error: column index out of range" << endl; return vector<vector<string>>(); }
 
-	for (int i = 0, j = 0; i < this->rel->column_names.size(); ++i) {
-		if (j >= agrf.size()) {
-			cerr << "Error: agregation function must be specified for every column not indexed" << endl;
-			return vector<vector<string>>();
-		}
-		if (find(columns.begin(), columns.end(), i) == columns.end()) agrf[j++]->set_column(i);
-	}
+	cout << "agrf.size() " << agrf.size() << endl;
+
+	if (!search_initialization(val, columns, agrf, this->rel->column_names.size()))
+		return vector<vector<string>>();
 
 	vector<vector<string>> result;
 	for (int i = 0; i < this->rel->fields.size(); ++i) {
@@ -44,20 +37,8 @@ SequentialSearch::search_value(
 		}
 	}
 
-	if (!this->print_to_file) {
-		for (int i = 0; i < agrf.size(); ++i)
-			cout << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column()) + "): " << agrf[i]->get_result() << endl;
-		for (vector<string>& row : result) {
-			for (string& column : row) cout << column << " "; cout << endl; }
-	}
-	else {
-		ofstream rfile(this->filename);
-		for (int i = 0; i < agrf.size(); ++i)
-			rfile << agrf[i]->agr_id() << "(Fact" + to_string(agrf[i]->get_column()) + "): " << agrf[i]->get_result() << endl;
-		for (vector<string>& row : result) {
-			for (string& column : row) rfile << column << " "; rfile << endl; }
-	}
-	for (int i = 0; i < agrf.size(); ++i)
-		delete agrf[i];
+	print_search_results(result, agrf);
+
+	for (int i = 0; i < agrf.size(); delete agrf[i++]);
 	return result;
 }
