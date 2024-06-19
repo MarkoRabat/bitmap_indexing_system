@@ -40,7 +40,7 @@ int main() {
 	cout << "second results: " << endl;
 	BitmapSearch s3(&r1);
 	 rez = s3.search_value(
-		"1 || a2 || b2 && abc12 && 2",
+		"1 && a1 || b2 && abc12 && 2",
 		{0, 1, 2, 5, 8},
 		{new Avg(), new Min(), new NoAgr(), new Max()}
 	);

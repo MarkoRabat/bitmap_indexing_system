@@ -44,23 +44,21 @@ void Relation::print_column_names() {
 	cout << this->column_names[this->column_names.size() - 1] << endl;
 }
 
-//#define BITSEQ_SIZE 4
-#define BITSEQ_SIZE 32
 unordered_map<string, vector<unsigned>> Relation::build_bitmap(int column) {
 
 	unordered_map<string, vector<unsigned>> bitmap;
 	for (int i = 0; i < this->fields.size(); ++i) {
-		int barr_size = (i != 0 && i % BITSEQ_SIZE == 0) ? 1 : 0;
+		int barr_size = (i != 0 && i % bsz == 0) ? 1 : 0;
 		if (bitmap.begin() != bitmap.end())
 			barr_size += bitmap[bitmap.begin()->first].size() - 1;
 		for (auto it = bitmap.begin(); it != bitmap.end(); ++it) {
-			if (i % BITSEQ_SIZE == 0) bitmap[it->first].push_back(0u);
+			if (i % bsz == 0) bitmap[it->first].push_back(0u);
 			bitmap[it->first][barr_size] <<= 1u;
 		}
 
 		if (bitmap.find(this->fields[i][column]) == bitmap.end()) {
 			bitmap[this->fields[i][column]] = vector<unsigned>();
-			for (int k = 0; k < 1 + i / BITSEQ_SIZE; ++k)
+			for (int k = 0; k < 1 + i / bsz; ++k)
 				bitmap[this->fields[i][column]].push_back(0u);
 		}
 		bitmap[this->fields[i][column]][barr_size]++;

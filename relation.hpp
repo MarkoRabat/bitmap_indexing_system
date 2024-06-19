@@ -28,6 +28,7 @@ private:
 	unordered_map<int,
 		unordered_map<string, vector<unsigned>>
 	> bitmaps;
+	int bsz = 32;
 };
 
 void strip(string& s);

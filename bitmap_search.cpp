@@ -61,15 +61,46 @@ BitmapSearch::search_value(
 	for (int i = 0; i < search_cond[0].size(); ++i)
 		rows_matched.push_back(0u);
 
-	for (int i = 0; i < search_cond.size(); ++i)
-		for (int j = 0; j < search_cond[i].size(); ++j)
+	for (int i = 0; i < search_cond.size(); ++i) {
+		cout << search_cond[i].size() << endl;
+		for (int j = 0; j < search_cond[i].size(); ++j) {
 			rows_matched[j] |= search_cond[i][j];
+			cout << rows_matched[j] << endl;
+		}
+	}
 
 	cout << "final selection (after or):" << endl;
 	for (int i = 0; i < rows_matched.size(); ++i) {
 		cout << rows_matched[i] << " ";
 	}
 	cout << endl;
+
+	//int bsz = 4;
+	int fieldsModBsz = this->rel->fields.size() % this->rel->bsz;
+	vector<unsigned> selected_rows;
+	for (int i = 0; i < rows_matched.size(); ++i) {
+		unsigned index_base = this->rel->bsz * i;
+		if (i + 1 == rows_matched.size()) {
+			if (fieldsModBsz == 0) fieldsModBsz = this->rel->bsz;
+			for (unsigned j = 0; j < fieldsModBsz; ++j) {
+				if ((rows_matched[i] & (1 << j)) > 0)
+					selected_rows.push_back(index_base + (fieldsModBsz - 1 - j));
+			}
+		}
+		else {
+			for (unsigned j = 0; j < this->rel->bsz; ++j) {
+				if ((rows_matched[i] & (1 << j)) > 0)
+					selected_rows.push_back(index_base + (this->rel->bsz - 1 - j));
+			}
+		}
+	}
+
+	cout << "selected rows indeces:" << endl;
+	for (int i = 0; i < selected_rows.size(); ++i) {
+		cout << selected_rows[i] << " ";
+	}
+	cout << endl;
+
 
 
 
