@@ -1,7 +1,6 @@
 #ifndef RELATION_HPP
 #define RELATION_HPP
 
-#include "search.hpp"
 #include <vector>
 #include <string>
 #include <tuple>
@@ -28,7 +27,7 @@ private:
 	unordered_map<int,
 		unordered_map<string, vector<unsigned>>
 	> bitmaps;
-	int bsz = 32;
+	int bsz = 4;
 };
 
 void strip(string& s);

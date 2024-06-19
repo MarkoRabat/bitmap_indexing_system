@@ -7,8 +7,11 @@ class Relation;
 #include <string>
 #include <sstream>
 #include <regex>
+#include <algorithm>
 #include <fstream>
+#include <tuple>
 #include "agregation.hpp"
+#include "relation.hpp"
 using namespace std;
 void strip(string&);
 
@@ -88,6 +91,55 @@ protected:
 			}
 		}
 		return true;
+	}
+	void print_index_rel_cols(vector<tuple<Relation*, int>> foreign_keys, vector<vector<string>> result) {
+		if (!this->print_to_file) {
+			cout << "=================================" << endl;
+			cout << "index_rel_cols: " << endl;
+			for (int i = 0; i < foreign_keys.size(); ++i) {
+				cout << "D" << get<1>(foreign_keys[i]) << ": " << endl;
+				vector<vector<string>> d_rows_to_print;
+				vector<string> already_got_ids;
+				for (int j = 0; j < result.size(); ++j)
+					for (int k = 0; k < get<0>(foreign_keys[i])->fields.size(); ++k)
+						if (result[j][get<1>(foreign_keys[i])] == get<0>(foreign_keys[i])->fields[k][0])
+							if (find(already_got_ids.begin(), already_got_ids.end(),
+								get<0>(foreign_keys[i])->fields[k][0]) == already_got_ids.end()) {
+								d_rows_to_print.push_back(get<0>(foreign_keys[i])->fields[k]);
+								already_got_ids.push_back(get<0>(foreign_keys[i])->fields[k][0]);
+							}
+
+				for (int j = 0; j < d_rows_to_print.size(); ++j) {
+					cout << "\t";
+					for (int k = 0; k < d_rows_to_print[j].size(); ++k)
+						cout << d_rows_to_print[j][k] << " "; cout << endl;
+				}
+			}
+		}
+		else {
+			ofstream rfile(this->filename, ios_base::app);
+			rfile << "=================================" << endl;
+			rfile << "index_rel_cols: " << endl;
+			for (int i = 0; i < foreign_keys.size(); ++i) {
+				rfile << "D" << get<1>(foreign_keys[i]) << ": " << endl;
+				vector<vector<string>> d_rows_to_print;
+				vector<string> already_got_ids;
+				for (int j = 0; j < result.size(); ++j)
+					for (int k = 0; k < get<0>(foreign_keys[i])->fields.size(); ++k)
+						if (result[j][get<1>(foreign_keys[i])] == get<0>(foreign_keys[i])->fields[k][0])
+							if (find(already_got_ids.begin(), already_got_ids.end(),
+								get<0>(foreign_keys[i])->fields[k][0]) == already_got_ids.end()) {
+								d_rows_to_print.push_back(get<0>(foreign_keys[i])->fields[k]);
+								already_got_ids.push_back(get<0>(foreign_keys[i])->fields[k][0]);
+							}
+
+				for (int j = 0; j < d_rows_to_print.size(); ++j) {
+					rfile << "\t";
+					for (int k = 0; k < d_rows_to_print[j].size(); ++k)
+						rfile << d_rows_to_print[j][k] << " "; rfile << endl;
+				}
+			}
+		}
 	}
 
 	Relation* rel;

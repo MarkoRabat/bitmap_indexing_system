@@ -82,17 +82,13 @@ BitmapSearch::search_value(
 		unsigned index_base = this->rel->bsz * i;
 		if (i + 1 == rows_matched.size()) {
 			if (fieldsModBsz == 0) fieldsModBsz = this->rel->bsz;
-			for (unsigned j = 0; j < fieldsModBsz; ++j) {
+			for (unsigned j = 0; j < fieldsModBsz; ++j)
 				if ((rows_matched[i] & (1 << j)) > 0)
 					selected_rows.push_back(index_base + (fieldsModBsz - 1 - j));
-			}
 		}
-		else {
-			for (unsigned j = 0; j < this->rel->bsz; ++j) {
-				if ((rows_matched[i] & (1 << j)) > 0)
-					selected_rows.push_back(index_base + (this->rel->bsz - 1 - j));
-			}
-		}
+		else for (unsigned j = 0; j < this->rel->bsz; ++j)
+			if ((rows_matched[i] & (1 << j)) > 0)
+				selected_rows.push_back(index_base + (this->rel->bsz - 1 - j));
 	}
 
 	cout << "selected rows indeces:" << endl;
@@ -102,14 +98,13 @@ BitmapSearch::search_value(
 	cout << endl;
 
 
-
-
-
-
-
-
+	for (int i = 0; i < selected_rows.size(); ++i) {
+		result.push_back(this->rel->fields[selected_rows[i]]);
+		for (int j = 0; j < agrf.size(); agrf[j++]->add_row(this->rel->fields[selected_rows[i]]));
+	}
 
 	print_search_results(result, agrf);
+	print_index_rel_cols(this->rel->foreign_keys, result);
 
 	for (int i = 0; i < agrf.size(); delete agrf[i++]);
 	return result;

@@ -7,14 +7,15 @@
 #include "agregation.hpp"
 using namespace std;
 
-int main() {
-	
+int main2() {
+
 	Relation r1("FactTable1.csv");
 	// !!! jako bitno
-	Relation d1("D1.csv");
-	Relation d2("D2.csv");
-	r1.add_edependency(&d1, 1);
-	r1.add_edependency(&d2, 2);
+	r1.add_edependency(nullptr, 0);
+	r1.add_edependency(nullptr, 1);
+	r1.add_edependency(nullptr, 2);
+	r1.add_edependency(nullptr, 5);
+	r1.add_edependency(nullptr, 8);
 	r1.print_column_names();
 
 	Search s1(&r1);
@@ -26,10 +27,10 @@ int main() {
 		{new Avg(), new Avg(), new Min(), new NoAgr(), new Max()}
 	);*/
 
-	 vector<vector<string>> rez = s2.search_value(
-		"a1 || b2",
-		{1, 2},
-		{new Count(), new Avg(), new Min(), new NoAgr(), new Count(), new Count(), new Max()}
+	vector<vector<string>> rez = s2.search_value(
+		"1 && a1 || b2 && abc12 && 2",
+		{ 0, 1, 2, 5, 8 },
+		{ new Avg(), new Min(), new NoAgr(), new Max() }
 	);
 	cout << "first results: " << endl;
 	for (vector<string>& row : rez) {
@@ -44,10 +45,10 @@ int main() {
 
 	cout << "second results: " << endl;
 	BitmapSearch s3(&r1);
-	 rez = s3.search_value(
-		"a1 || b2",
-		{1, 2},
-		{new Count(), new Avg(), new Min(), new NoAgr(), new Count(), new Count(), new Max()}
+	rez = s3.search_value(
+		"1 && a1 || b2 && abc12 && 2",
+		{ 0, 1, 2, 5, 8 },
+		{ new Avg(), new Min(), new NoAgr(), new Max() }
 	);
 
 	return 0;

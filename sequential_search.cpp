@@ -38,6 +38,7 @@ SequentialSearch::search_value(
 	}
 
 	print_search_results(result, agrf);
+	print_index_rel_cols(this->rel->foreign_keys, result);
 
 	for (int i = 0; i < agrf.size(); delete agrf[i++]);
 	return result;
